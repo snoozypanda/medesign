@@ -13,35 +13,45 @@ type Props = {
 }
 
 /**
- * Dark, image-backed hero used across inner pages (Services, About, Work,
- * Contact). The home page uses its own taller hero variant.
+ * Masked display page hero matching the design pattern from the mockup.
+ * Used across inner pages (Services, About, Work, Contact, Blog).
  */
 export function PageHero({ title, subtitle, children, size = 'md' }: Props) {
   return (
-    <section className="relative overflow-hidden bg-ink pt-28 lg:pt-32">
-      {/* Ambient background imagery + gradient veil */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,rgba(102,199,151,0.16),transparent_45%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,28,38,0.4),rgba(23,35,45,0.95))]" />
+    <section className="relative mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8 pt-4">
+      {/* Masked Background Container */}
+      <div className="hero-mask absolute inset-x-5 top-4 bottom-0 z-0 bg-ink sm:inset-x-6 lg:inset-x-8">
+        <img
+          src="/hero-bg.png"
+          alt=""
+          className="h-full w-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-ink/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/30" />
       </div>
 
-      <Container className="relative">
+      <Container className="relative z-10">
         <motion.div
           variants={staggerContainer(0.12)}
           initial="hidden"
           animate="show"
-          className={size === 'lg' ? 'py-20 lg:py-28' : 'py-16 lg:py-20'}
+          className={cn(
+            "flex flex-col items-center justify-center text-center",
+            size === 'lg'
+              ? 'pb-24 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-48'
+              : 'pb-20 pt-28 sm:pb-24 sm:pt-36 lg:pb-28 lg:pt-44'
+          )}
         >
           <motion.h1
             variants={fadeInUp}
-            className="max-w-4xl text-4xl font-extrabold leading-[1.05] text-white sm:text-5xl lg:text-6xl"
+            className="max-w-4xl text-5xl font-extrabold leading-[1.05] text-white sm:text-6xl lg:text-7xl"
           >
             {title}
           </motion.h1>
           {subtitle ? (
             <motion.p
               variants={fadeInUp}
-              className="mt-6 max-w-2xl text-base leading-relaxed text-white/70"
+              className="mt-6 max-w-2xl text-base leading-relaxed text-white/70 mx-auto"
             >
               {subtitle}
             </motion.p>
@@ -56,3 +66,6 @@ export function PageHero({ title, subtitle, children, size = 'md' }: Props) {
     </section>
   )
 }
+
+// Helper utility inline wrapper to support standard imports
+import { cn } from '@/lib/cn'

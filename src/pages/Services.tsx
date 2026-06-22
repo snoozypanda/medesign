@@ -13,7 +13,7 @@ export default function Services() {
   return (
     <>
       <PageHero
-        title={<span className="text-accent">Services</span>}
+        title={<>Servic<span className="text-accent">es</span></>}
         subtitle="At MEDesign, we combine creative design, strategy, and data-driven marketing to help healthcare brands grow with purpose."
       />
 
