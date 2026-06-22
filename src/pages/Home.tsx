@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { Button } from '@/components/ui/Button'
 import { Carousel } from '@/components/ui/Carousel'
 import { Logo } from '@/components/ui/Logo'
-import { ProjectCard } from '@/components/cards/ProjectCard'
 import { TestimonialCard } from '@/components/cards/TestimonialCard'
 import { TeamSection } from '@/components/shared/TeamSection'
 import { ArrowRight } from '@/components/ui/Icon'
+import { ArrowCircleButton } from '@/components/ui/ArrowCircleButton'
 import { fadeInUp, revealOnce, staggerContainer } from '@/lib/motion'
 import { PROJECTS } from '@/data/projects'
 import { TESTIMONIALS } from '@/data/team'
@@ -33,28 +32,28 @@ export default function Home() {
 /* ────────────────────────────────────────────────────────────────────── */
 function HomeHero() {
   return (
-    <section className="relative overflow-hidden bg-ink">
-      {/* Background image with dark overlay */}
-      <div className="absolute inset-0" aria-hidden="true">
+    <section className="relative mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8 pt-4">
+      {/* Masked Background Container */}
+      <div className="hero-mask absolute inset-x-5 top-4 bottom-0 z-0 bg-ink sm:inset-x-6 lg:inset-x-8">
         <img
           src="/hero-bg.png"
           alt=""
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-ink/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/30" />
+        <div className="absolute inset-0 bg-ink/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/30" />
       </div>
 
-      <Container className="relative">
+      <div className="relative z-10 px-6 pb-24 pt-32 sm:px-12 sm:pb-28 sm:pt-40 lg:px-16 lg:pb-32 lg:pt-48">
         <motion.div
           variants={staggerContainer(0.14)}
           initial="hidden"
           animate="show"
-          className="flex flex-col items-start pb-6 pt-36 text-left lg:pb-8 lg:pt-44"
+          className="flex flex-col items-center text-center"
         >
           <motion.h1
             variants={fadeInUp}
-            className="max-w-3xl text-4xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-[3.75rem]"
+            className="max-w-3xl text-4xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-[3.75rem] mx-auto"
           >
             Transform Healthcare
             <br />
@@ -65,40 +64,40 @@ function HomeHero() {
 
           <motion.p
             variants={fadeInUp}
-            className="mt-6 max-w-xl text-sm leading-relaxed text-white/70"
+            className="mt-6 max-w-xl text-sm leading-relaxed text-white/70 mx-auto"
           >
             {INTRO}
           </motion.p>
         </motion.div>
-      </Container>
+      </div>
 
-      {/* Bottom bar: dots pattern left + Get Started button right */}
+      {/* Bottom bar: circles left + green CTA right */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
-        className="relative mx-5 mb-5 flex items-center gap-4 sm:mx-6 lg:mx-8"
-        style={{ maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto', paddingLeft: '1.25rem', paddingRight: '0' }}
+        className="absolute bottom-0 translate-y-1/2 left-5 right-5 z-10 flex items-center justify-between gap-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8"
       >
-        {/* Dots / circles pattern from Asset 4 */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        {/* Circles container (aligned with bottom-left cutout) */}
+        <div className="flex items-center gap-1.5 rounded-full bg-white p-1.5 shadow-sm shrink-0">
+          <span className="h-10 w-10 rounded-full bg-ink" />
           <span className="h-10 w-10 rounded-full bg-accent" />
-          <span className="h-10 w-10 rounded-full bg-ink-deep" />
-          <span className="h-10 w-10 rounded-full bg-accent/40" />
+          <span className="h-10 w-10 rounded-full bg-ink" />
+          <span className="h-10 w-10 rounded-full bg-accent" />
         </div>
 
-        {/* Wide green bar with "Get Started" */}
+        {/* Wide green bar with "Get Started" (aligned with bottom-right cutout) */}
         <a
           href="/contact"
-          className="flex flex-1 items-center justify-end rounded-full bg-accent px-8 py-4 text-sm font-bold text-ink transition-colors hover:bg-accent-hover"
+          className="flex flex-1 max-w-[360px] sm:max-w-[900px] ml-auto items-center justify-between rounded-full bg-accent px-8 py-4 text-sm font-bold text-ink transition-colors hover:bg-accent-hover"
         >
-          Get Started
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <span />
+          <span className="flex items-center">
+            Get Started
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </span>
         </a>
       </motion.div>
-
-      {/* Tiny spacer */}
-      <div className="h-4" />
     </section>
   )
 }
@@ -107,10 +106,21 @@ function HomeHero() {
 /*  Latest Projects — left text + right carousel cards                   */
 /* ────────────────────────────────────────────────────────────────────── */
 function LatestProjects() {
-  // Carousel state for the 2-card view
   const [page, setPage] = useState(0)
   const projects = PROJECTS.slice(0, 6)
-  const perView = 2
+
+  const [perView, setPerView] = useState(3)
+  useEffect(() => {
+    const updatePerView = () => {
+      if (window.innerWidth < 640) setPerView(1)
+      else if (window.innerWidth < 1024) setPerView(2)
+      else setPerView(3)
+    }
+    updatePerView()
+    window.addEventListener('resize', updatePerView)
+    return () => window.removeEventListener('resize', updatePerView)
+  }, [])
+
   const pages = Math.ceil(projects.length / perView)
 
   const go = useCallback(
@@ -133,108 +143,89 @@ function LatestProjects() {
 
   const gap = 24
   const cardWidth = useMemo(
-    () => (trackWidth > 0 ? (trackWidth - gap) / perView : 0),
-    [trackWidth],
+    () => (trackWidth > 0 ? (trackWidth - gap * (perView - 1)) / perView : 0),
+    [trackWidth, perView],
   )
 
   return (
     <Section>
-      <div className="flex flex-col gap-10 lg:flex-row lg:gap-16">
-        {/* Left column — label, heading, description, CTA */}
-        <motion.div
-          variants={staggerContainer(0.12)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          className="flex flex-col items-start lg:w-[38%] lg:shrink-0"
-        >
-          <motion.span
-            variants={fadeInUp}
-            className="mb-5 inline-block rounded-full border border-ink/15 px-4 py-1.5 text-xs font-medium text-ink"
-          >
-            latest projects
-          </motion.span>
+      <SectionHeading
+        align="left"
+        title={
+          <>
+            Latest <span className="text-accent">project</span>
+          </>
+        }
+        description="At MEDesign, we combine creative design, strategy, and data-driven marketing to help healthcare brands grow with purpose"
+      />
 
-          <motion.h2
-            variants={fadeInUp}
-            className="text-2xl font-extrabold leading-tight text-ink sm:text-3xl lg:text-[2.2rem]"
+      {/* Project cards carousel */}
+      <div className="relative mt-8">
+        <div ref={trackRef} className="overflow-hidden">
+          <motion.div
+            className="flex"
+            style={{ gap }}
+            animate={{ x: -page * (trackWidth + gap) }}
+            transition={{ type: 'spring', stiffness: 260, damping: 32 }}
           >
-            Every project we deliver is more than design it's measurable impact.
-            From building patient trust through rebranding to increasing
-            appointments through marketing, we turn ideas into results.
-          </motion.h2>
-
-          <motion.div variants={fadeInUp} className="mt-8">
-            <Button to="/work" size="sm" variant="outline" className="!border-ink/20 !text-ink hover:!bg-ink hover:!text-white">
-              More Works
-            </Button>
+            {projects.map((p) => (
+              <div
+                key={p.slug}
+                className="shrink-0"
+                style={{ width: cardWidth > 0 ? cardWidth : undefined }}
+              >
+                <LatestProjectCard project={p} />
+              </div>
+            ))}
           </motion.div>
-        </motion.div>
-
-        {/* Right column — project cards carousel */}
-        <div className="flex-1 min-w-0">
-          <div ref={trackRef} className="overflow-hidden">
-            <motion.div
-              className="flex"
-              style={{ gap }}
-              animate={{ x: -page * (trackWidth + gap) }}
-              transition={{ type: 'spring', stiffness: 260, damping: 32 }}
-            >
-              {projects.map((p, i) => (
-                <div
-                  key={p.slug}
-                  className="shrink-0"
-                  style={{ width: cardWidth > 0 ? cardWidth : undefined }}
-                >
-                  <LatestProjectCard project={p} />
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Carousel arrows */}
-          {pages > 1 && (
-            <div className="mt-6 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => go(-1)}
-                disabled={page === 0}
-                aria-label="Previous"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
-              >
-                <ArrowRight className="h-4 w-4 rotate-180" />
-              </button>
-              <button
-                type="button"
-                onClick={() => go(1)}
-                disabled={page === pages - 1}
-                aria-label="Next"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          )}
         </div>
+
+        {/* Carousel arrows */}
+        {pages > 1 && (
+          <div className="mt-8 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              disabled={page === 0}
+              aria-label="Previous"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
+            >
+              <ArrowRight className="h-4 w-4 rotate-180" />
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              disabled={page === pages - 1}
+              aria-label="Next"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
     </Section>
   )
 }
 
-/** Dark card with image area + descriptive text at bottom (matches the mockup screenshot). */
+/** White card with dark image container, text, and arrow circle button (matches the mockup screenshot). */
 function LatestProjectCard({ project }: { project: import('@/data/projects').Project }) {
   return (
     <motion.article variants={fadeInUp} className="group">
-      <div className="overflow-hidden rounded-2xl bg-ink shadow-card transition-shadow duration-300 group-hover:shadow-card-hover">
-        {/* Dark image area */}
-        <div className="aspect-[4/3] w-full bg-gradient-to-br from-ink to-ink-deep" />
-        {/* Text below */}
-        <div className="p-5">
-          <p className="text-sm leading-relaxed text-white/70">
-            Professional marketing materials that communicate your brand&apos;s message
-          </p>
+      <Link to={`/work/${project.slug}`} className="block">
+        <div className="rounded-[2rem] bg-white border border-slate-100 p-4 shadow-card transition-all duration-300 hover:shadow-card-hover">
+          {/* Dark image area */}
+          <div className="aspect-[4/3] w-full bg-ink rounded-[1.5rem] overflow-hidden" />
+          {/* Text and button below */}
+          <div className="flex items-center justify-between gap-4 px-2 py-4">
+            <div>
+              <h3 className="text-xl font-bold text-ink">{project.title}</h3>
+              <p className="mt-1 text-sm text-slate-body">{project.excerpt}</p>
+            </div>
+            <ArrowCircleButton size="md" className="shrink-0" />
+          </div>
         </div>
-      </div>
+      </Link>
     </motion.article>
   )
 }

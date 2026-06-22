@@ -55,7 +55,7 @@ export function Navbar() {
           )}
         >
           <Link to="/" aria-label="MEDesign home" className="shrink-0">
-            <Logo />
+            <Logo variant={location.pathname === '/' && !scrolled ? 'dark' : 'light'} />
           </Link>
 
           <ul className="hidden items-center gap-6 md:flex">
@@ -77,7 +77,7 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <Button to="/contact" size="sm" className="hidden sm:inline-flex">
+            <Button to="/contact" size="sm" className="hidden sm:inline-flex text-white">
               Connect
             </Button>
             <button

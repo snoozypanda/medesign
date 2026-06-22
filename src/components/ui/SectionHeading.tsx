@@ -26,8 +26,10 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        'mb-10 flex flex-col gap-4 lg:mb-14 lg:flex-row lg:items-end lg:justify-between',
-        align === 'center' && 'items-center text-center lg:flex-col',
+        'mb-10 flex flex-col gap-4 lg:mb-14',
+        align === 'center'
+          ? 'items-center text-center'
+          : 'lg:flex-row lg:items-end lg:justify-between',
         className,
       )}
     >
@@ -35,6 +37,7 @@ export function SectionHeading({
         variants={fadeInUp}
         className={cn(
           'max-w-xl text-3xl font-extrabold leading-tight sm:text-4xl lg:text-[2.75rem]',
+          align === 'center' && 'mx-auto',
           tone === 'dark' ? 'text-ink' : 'text-white',
         )}
       >

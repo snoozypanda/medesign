@@ -48,9 +48,17 @@ export function ArrowCircleButton({
     )
   }
 
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} aria-label={ariaLabel} className={classes}>
+        {inner}
+      </button>
+    )
+  }
+
   return (
-    <button type="button" onClick={onClick} aria-label={ariaLabel} className={classes}>
+    <div className={classes}>
       {inner}
-    </button>
+    </div>
   )
 }

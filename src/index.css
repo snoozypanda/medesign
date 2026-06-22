@@ -104,4 +104,16 @@
       scroll-behavior: auto !important;
     }
   }
+
+  .hero-mask {
+    mask-image: url('/hero-frame.png');
+    mask-size: 100% 100%;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('/hero-frame.png');
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+  }
 }
+

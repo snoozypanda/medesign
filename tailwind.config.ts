@@ -5,21 +5,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Sampled directly from the PDF mockup
+        // Updated to match the exact colors from image_2026-06-21_21-14-38.png
         ink: {
-          DEFAULT: '#17232D', // primary dark (hero, cards)
-          deep: '#16222C',
-          900: '#121E28',
-          950: '#0F1C26',
+          DEFAULT: '#072533', // Rich Black
+          deep: '#051b26',
+          900: '#072533',
+          950: '#031118',
         },
         navy: {
-          DEFAULT: '#203D53', // form / CTA panels
-          light: '#274761',
+          DEFAULT: '#114257', // Yale Blue
+          light: '#16536e',
         },
         accent: {
-          DEFAULT: '#66C797', // brand green
-          hover: '#7BD6A8',
-          soft: '#E7F6EE', // light mint icon chips
+          DEFAULT: '#5EC1A1', // Medium Aquamarine
+          hover: '#73D4B4',
+          soft: '#EBF8F4',
         },
         slate: {
           body: '#5B6B78', // body copy on light
@@ -28,7 +28,7 @@ export default {
       },
       fontFamily: {
         display: ['NeulisAlt', 'Sora', 'system-ui', 'sans-serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['NeulisAlt', 'Inter', 'system-ui', 'sans-serif'],
       },
       maxWidth: {
         container: '1200px',

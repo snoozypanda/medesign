@@ -27,7 +27,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <h3 className="text-lg font-bold text-white">{project.title}</h3>
               <p className="mt-1 text-sm text-white/55">{project.excerpt}</p>
             </div>
-            <ArrowCircleButton to={`/work/${project.slug}`} ariaLabel={`View ${project.category}`} />
+            <ArrowCircleButton ariaLabel={`View ${project.category}`} />
           </div>
         </motion.div>
       </Link>
