@@ -109,12 +109,12 @@ function LatestProjects() {
   const [page, setPage] = useState(0)
   const projects = PROJECTS.slice(0, 6)
 
-  const [perView, setPerView] = useState(3)
+  const [perView, setPerView] = useState(2)
   useEffect(() => {
     const updatePerView = () => {
       if (window.innerWidth < 640) setPerView(1)
       else if (window.innerWidth < 1024) setPerView(2)
-      else setPerView(3)
+      else setPerView(2)
     }
     updatePerView()
     window.addEventListener('resize', updatePerView)
@@ -144,86 +144,96 @@ function LatestProjects() {
   const gap = 24
   const cardWidth = useMemo(
     () => (trackWidth > 0 ? (trackWidth - gap * (perView - 1)) / perView : 0),
-    [trackWidth, perView],
+    [trackWidth, perView, gap],
   )
 
   return (
     <Section>
-      <SectionHeading
-        align="left"
-        title={
-          <>
-            Latest <span className="text-accent">project</span>
-          </>
-        }
-        description="At MEDesign, we combine creative design, strategy, and data-driven marketing to help healthcare brands grow with purpose"
-      />
-
-      {/* Project cards carousel */}
-      <div className="relative mt-8">
-        <div ref={trackRef} className="overflow-hidden">
-          <motion.div
-            className="flex"
-            style={{ gap }}
-            animate={{ x: -page * (trackWidth + gap) }}
-            transition={{ type: 'spring', stiffness: 260, damping: 32 }}
+      <div className="grid gap-12 lg:grid-cols-12 items-center">
+        {/* Left column - Heading & CTA */}
+        <div className="lg:col-span-5 flex flex-col items-start text-left gap-6">
+          <span className="inline-flex rounded-full border border-accent/40 bg-accent/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
+            latest projects
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink leading-snug">
+            Every project we deliver is more than design it&apos;s measurable impact. From building patient trust through rebranding to increasing appointments through marketing, we turn ideas into results.
+          </h2>
+          <Link
+            to="/work"
+            className="inline-flex rounded-full bg-ink px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-ink/90 mt-2"
           >
-            {projects.map((p) => (
-              <div
-                key={p.slug}
-                className="shrink-0"
-                style={{ width: cardWidth > 0 ? cardWidth : undefined }}
-              >
-                <LatestProjectCard project={p} />
-              </div>
-            ))}
-          </motion.div>
+            More Works
+          </Link>
         </div>
 
-        {/* Carousel arrows */}
-        {pages > 1 && (
-          <div className="mt-8 flex items-center justify-end gap-3">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              disabled={page === 0}
-              aria-label="Previous"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
+        {/* Right column - Carousel */}
+        <div className="lg:col-span-7 w-full overflow-hidden relative">
+          <div ref={trackRef} className="overflow-hidden">
+            <motion.div
+              className="flex"
+              style={{ gap }}
+              animate={{ x: -page * (trackWidth + gap) }}
+              transition={{ type: 'spring', stiffness: 260, damping: 32 }}
             >
-              <ArrowRight className="h-4 w-4 rotate-180" />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              disabled={page === pages - 1}
-              aria-label="Next"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
+              {projects.map((p) => (
+                <div
+                  key={p.slug}
+                  className="shrink-0"
+                  style={{ width: cardWidth > 0 ? cardWidth : undefined }}
+                >
+                  <LatestProjectCard project={p} />
+                </div>
+              ))}
+            </motion.div>
           </div>
-        )}
+
+          {/* Carousel arrows */}
+          {pages > 1 && (
+            <div className="mt-8 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                disabled={page === 0}
+                aria-label="Previous"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
+              >
+                <ArrowRight className="h-4 w-4 rotate-180" />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                disabled={page === pages - 1}
+                aria-label="Next"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent text-accent transition-colors duration-200 hover:bg-accent hover:text-ink disabled:opacity-30"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </Section>
   )
 }
 
-/** White card with dark image container, text, and arrow circle button (matches the mockup screenshot). */
+/** Dark card matching the mockup page-1.png with text overlayed inside the block at the bottom. */
 function LatestProjectCard({ project }: { project: import('@/backend/features/projects/projects').Project }) {
   return (
-    <motion.article variants={fadeInUp} className="group">
-      <Link to={`/work/${project.slug}`} className="block">
-        <div className="rounded-[2rem] bg-white border border-slate-100 p-4 shadow-card transition-all duration-300 hover:shadow-card-hover">
-          {/* Dark image area */}
-          <div className="aspect-[4/3] w-full bg-ink rounded-[1.5rem] overflow-hidden" />
-          {/* Text and button below */}
-          <div className="flex items-center justify-between gap-4 px-2 py-4">
-            <div>
-              <h3 className="text-xl font-bold text-ink">{project.title}</h3>
-              <p className="mt-1 text-sm text-slate-body">{project.excerpt}</p>
-            </div>
-            <ArrowCircleButton size="md" className="shrink-0" />
-          </div>
+    <motion.article
+      variants={fadeInUp}
+      whileHover={{ y: -8 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="group relative aspect-[4/5] w-full bg-ink rounded-[2rem] overflow-hidden shadow-card hover:shadow-card-hover cursor-pointer"
+    >
+      <Link to={`/work/${project.slug}`} className="absolute inset-0 p-6 flex flex-col justify-end">
+        {/* Dark overlay background for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent opacity-75 transition-opacity duration-300 group-hover:opacity-90" />
+        
+        {/* Text content inside the card */}
+        <div className="relative z-10">
+          <p className="text-white text-lg font-bold leading-snug line-clamp-3">
+            {project.excerpt}
+          </p>
         </div>
       </Link>
     </motion.article>

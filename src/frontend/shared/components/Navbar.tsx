@@ -55,7 +55,7 @@ export function Navbar() {
           )}
         >
           <Link to="/" aria-label="MEDesign home" className="shrink-0">
-            <Logo variant={!scrolled ? 'dark' : 'light'} />
+            <Logo variant={scrolled || location.pathname === '/contact' ? 'light' : 'dark'} />
           </Link>
 
           <ul className="hidden items-center gap-6 md:flex">
