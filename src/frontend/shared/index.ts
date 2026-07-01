@@ -27,6 +27,17 @@ export {
   Linkedin,
   Twitter,
   Facebook,
+  LayoutDashboard,
+  FileText,
+  Briefcase,
+  MessageSquare,
+  LogOut,
+  Plus,
+  Trash2,
+  Eye,
+  Edit,
+  Search,
+  Settings,
 } from './components/Icon'
 
 // Utilities
