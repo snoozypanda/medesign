@@ -1,5 +1,5 @@
 # Render Blueprint — MEDesign API + PostgreSQL
-# Deploy: Render Dashboard → New → Blueprint → connect GitHub repo
+# Deploy branch: backend
 
 databases:
   - name: medesign-db
@@ -13,15 +13,14 @@ services:
     runtime: node
     region: oregon
     plan: free
-    rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
+      - key: NODE_VERSION
+        value: 20.18.0
       - key: DATABASE_URL
         fromDatabase:
           name: medesign-db

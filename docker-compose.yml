@@ -17,11 +17,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - medesign
 
   backend:
-    build: ./backend
+    build: .
     container_name: medesign-backend
     environment:
       DB_HOST: postgres
@@ -29,32 +27,20 @@ services:
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_DATABASE: ${DB_DATABASE:-medesign}
-      NODE_ENV: ${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-development}
       PORT: 3001
-      JWT_SECRET: ${JWT_SECRET:-change_this_in_production}
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-7d}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost,http://localhost:80}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
     ports:
       - '3001:3001'
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - medesign
-
-  frontend:
-    build: ./frontend
-    container_name: medesign-frontend
-    ports:
-      - '${FRONTEND_PORT:-80}:80'
-    depends_on:
-      - backend
-    networks:
-      - medesign
+    volumes:
+      - ./src:/app/src
+      - ./node_modules:/app/node_modules
+    command: npm run start:dev
 
 volumes:
   postgres_data:
-
-networks:
-  medesign:
-    driver: bridge

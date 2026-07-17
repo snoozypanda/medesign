@@ -1,18 +1,23 @@
 # Backend branch — deploy on Render
 
-## Option A: Blueprint (recommended)
-1. Render → New → Blueprint
-2. Connect `snoozypanda/medesign`
-3. Set branch to **`backend`**
-4. Apply `render.yaml` (creates API + Postgres)
+This branch has the NestJS API at the **repo root** (package.json is here).
 
-## Option B: Web Service manually
-1. Render → New → Web Service
-2. Repo: `snoozypanda/medesign`, Branch: **`backend`**
-3. **Root Directory:** `backend`
-4. **Build:** `npm install && npm run build`
-5. **Start:** `npm run start:prod`
-6. **Health check:** `/api/health`
-7. Add env vars: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NODE_ENV=production`, `TYPEORM_SYNCHRONIZE=true`, `SEED_ON_START=true`
+## Manual Web Service settings
+- **Branch:** `backend`
+- **Root Directory:** leave empty
+- **Runtime:** Node
+- **Build Command:** `npm install && npm run build`
+- **Start Command:** `npm run start:prod`
+- **Health Check Path:** `/api/health`
 
-After Vercel is live, set `CORS_ORIGIN` to your Vercel URL.
+## Required env vars
+- `NODE_ENV=production`
+- `DATABASE_URL` (from Render Postgres)
+- `JWT_SECRET` (any long random string)
+- `CORS_ORIGIN` = your Vercel URL (e.g. https://your-app.vercel.app)
+- `TYPEORM_SYNCHRONIZE=true`
+- `SEED_ON_START=true`
+- `ADMIN_EMAIL=admin@medesign.com`
+- `ADMIN_PASSWORD=admin123`
+
+Do **not** use `yarn` — use the npm commands above.
